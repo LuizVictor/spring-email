@@ -1,6 +1,5 @@
 package br.com.luizvictor.springemail.resources;
 
-import br.com.luizvictor.springemail.entities.user.UserDto;
 import br.com.luizvictor.springemail.repositories.UserRepository;
 import br.com.luizvictor.springemail.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static br.com.luizvictor.springemail.common.UserConstant.VALID_USER_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,10 +38,9 @@ class UserResourceTest {
 
     @Test
     void save_withValidData_mustReturnStatusCreated() throws Exception {
-        var dto = new UserDto("John Doe", "john@email.com", "123456");
         mvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsBytes(dto)))
+                        .content(mapper.writeValueAsBytes(VALID_USER_DTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("John Doe"))
@@ -54,8 +53,7 @@ class UserResourceTest {
 
     @Test
     void findById_withExistingId_mustReturnStatusOk() throws Exception {
-        var dto = new UserDto("John Doe", "john@email.com", "123456");
-        userService.save(dto);
+        userService.save(VALID_USER_DTO);
         mvc.perform(get("/api/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

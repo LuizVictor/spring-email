@@ -28,4 +28,10 @@ public class UserResource {
         UserDetailsDto user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
+
+    @GetMapping("/validate")
+    public ResponseEntity<String> verifyToken(@RequestParam("token") String token) {
+        userService.verifyToken(token);
+        return ResponseEntity.ok().body("Validated user");
+    }
 }
