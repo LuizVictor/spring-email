@@ -12,16 +12,19 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final UserVerificationRepository userVerificationRepository;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, UserVerificationRepository userVerificationRepository1) {
+    public UserService(UserRepository userRepository, UserVerificationRepository userVerificationRepository1, EmailService emailService) {
         this.userRepository = userRepository;
         this.userVerificationRepository = userVerificationRepository1;
+        this.emailService = emailService;
     }
 
     public UserDetailsDto save(UserDto dto) {
         User user = userRepository.save(new User(dto));
         UserVerification userVerification = new UserVerification(user);
         userVerificationRepository.save(userVerification);
+        emailService.sendVerificationEmail(user.getEmail(), userVerification.getToken());
 
         return new UserDetailsDto(user);
     }
