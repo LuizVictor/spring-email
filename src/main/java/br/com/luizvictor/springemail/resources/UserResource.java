@@ -31,7 +31,11 @@ public class UserResource {
 
     @GetMapping("/validate")
     public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
-        userService.validateToken(token);
-        return ResponseEntity.ok().body("Validated user");
+        try {
+            userService.validateToken(token);
+            return ResponseEntity.ok().body("Validated user");
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
