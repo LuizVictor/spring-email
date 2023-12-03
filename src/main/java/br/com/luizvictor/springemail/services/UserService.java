@@ -34,12 +34,12 @@ public class UserService {
         return new UserDetailsDto(user);
     }
 
-    public void verifyToken(String token) {
+    public void validateToken(String token) {
         UserVerification userVerification = userVerificationRepository.findByToken(token).orElseThrow(() -> new RuntimeException("Token not found"));
         userVerification.verify();
-        userVerificationRepository.save(userVerification);
         User user = userRepository.getReferenceById(userVerification.getUser().getId());
         user.enable();
+        userVerificationRepository.save(userVerification);
         userRepository.save(user);
     }
 }

@@ -19,7 +19,8 @@ public class EmailService {
         message.setTo(to);
         message.setFrom("noreply@email.com");
         message.setSubject("Account Verification");
-        message.setText("Hello, please click on the link below to verify your account. \n\n http://localhost:8080/api/users/validate?token=" + token);
+        String URL = "http://localhost:8080/api/users/validate?token=";
+        message.setText("Hello, please click on the link below to verify your account. \n\n" + URL + token);
 
         mailSender.send(message);
     }
